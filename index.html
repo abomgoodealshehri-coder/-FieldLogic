@@ -6,220 +6,166 @@
     <title>نظام جمع البيانات الميدانية - NWC</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            direction: rtl;
-        }
-        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
-        .header {
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo-icon {
-            width: 45px; height: 45px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 22px; flex-shrink: 0;
-        }
-        .logo-text h1 { font-size: 18px; color: #333; margin-bottom: 3px; }
-        .logo-text p { font-size: 12px; color: #666; }
-        .btn {
-            padding: 12px 24px; border: none; border-radius: 8px;
-            font-size: 16px; font-weight: bold; cursor: pointer;
-            transition: all 0.3s; width: 100%;
-        }
-        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea; }
-        .nav-tabs {
-            background: white; border-radius: 15px; padding: 8px;
-            margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-        }
-        .nav-tab { padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: #666; background: transparent; }
-        .nav-tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .form-group { margin-bottom: 18px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px; }
-        .form-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .photo-upload { border: 2px dashed #ddd; border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; background: #f8f9ff; }
-        .photo-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 10px; }
-        .photo-item { position: relative; border-radius: 8px; overflow: hidden; height: 100px; }
-        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
-        .photo-remove { position: absolute; top: 2px; left: 2px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }
-        .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; display: none; }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
-        .hidden { display: none !important; }
-        .location-card { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 12px; border-right: 5px solid #667eea; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; direction: rtl; }
+        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background: #fff; }
+        .form-input[readonly] { background: #e9ecef; color: #495057; }
+        .btn { padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 5px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-primary:disabled { background: #ccc; }
+        .btn-gps { background: #28a745; color: white; margin-bottom: 15px; }
+        .btn-photo { background: #6c757d; color: white; }
+        .photo-preview { display: flex; gap: 10px; margin-top: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .photo-item { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
+        .success-msg { color: #28a745; text-align: center; font-weight: bold; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">
-                <div class="logo-icon">📍</div>
-                <div class="logo-text">
-                    <h1>نظام جمع البيانات الميدانية</h1>
-                    <p>Field Data Collection System</p>
+        <div class="card">
+            <div class="header">
+                <h2 style="color: #007bff;">📍 جمع بيانات الميدان</h2>
+                <p style="font-size: 14px; color: #666;">شركة المياه الوطنية - NWC</p>
+            </div>
+            
+            <button type="button" class="btn btn-gps" onclick="getLocation()">🛰️ جلب إحداثيات الموقع الحالي (GPS)</button>
+            
+            <form id="locationForm">
+                <div class="form-group">
+                    <label class="form-label">إحداثيات الموقع</label>
+                    <input type="text" class="form-input" id="coords" readonly placeholder="اضغط على زر GPS بالأعلى" required>
                 </div>
-            </div>
-        </div>
-
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('field')">📱 جمع البيانات</button>
-            <button class="nav-tab" onclick="switchTab('office')">💼 إدارة البيانات</button>
-        </div>
-
-        <div id="fieldTab" class="tab-content active">
-            <div class="card">
-                <form id="locationForm">
-                    <div class="form-group">
-                        <label class="form-label">اسم الموقع *</label>
-                        <input type="text" class="form-input" id="siteName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">رقم العقار *</label>
-                        <input type="text" class="form-input" id="propertyNumber" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">رقم عداد المياه *</label>
-                        <input type="text" class="form-input" id="waterMeterNumber" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">قراءة عداد المياه *</label>
-                        <input type="number" class="form-input" id="waterMeterReading" required step="0.01">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">الصور (حتى 3 صور)</label>
-                        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                            📸 اضغط لرفع الصور
-                            <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
-                        </div>
-                        <div id="photoPreview" class="photo-preview"></div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" id="saveBtn">💾 حفظ البيانات في Google Sheets</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="officeTab" class="tab-content">
-            <div class="card">
-                <h2>المواقع المحفوظة محلياً</h2>
-                <div id="locationsList" style="margin-top: 15px;"></div>
-            </div>
+                
+                <div class="form-group">
+                    <label class="form-label">اسم الموقع *</label>
+                    <input type="text" class="form-input" id="siteName" required placeholder="مثلاً: حي السد">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">رقم العقار *</label>
+                    <input type="text" class="form-input" id="propertyNumber" required placeholder="أدخل رقم العقار">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">رقم عداد المياه *</label>
+                    <input type="text" class="form-input" id="waterMeterNumber" required placeholder="رقم العداد">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">قراءة العداد الحالية *</label>
+                    <input type="number" class="form-input" id="waterMeterReading" required step="0.01" placeholder="0.00">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">الصور (بحد أقصى 3 صور)</label>
+                    <input type="file" id="photoInput" accept="image/*" multiple style="display:none">
+                    <button type="button" class="btn btn-photo" onclick="document.getElementById('photoInput').click()">📸 التقاط أو اختيار الصور</button>
+                    <div id="photoPreview" class="photo-preview"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="saveBtn">💾 حفظ وإرسال البيانات لـ Google Sheets</button>
+                <div id="successMsg" class="success-msg">✅ تم الحفظ بنجاح! جاهز للموقع التالي.</div>
+            </form>
         </div>
     </div>
 
     <script>
         let currentPhotos = [];
-        let allLocations = JSON.parse(localStorage.getItem('fieldDataLocations') || '[]');
+        // تم وضع الرابط الجديد الخاص بك هنا
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdK890_RqdTjBGj_aACVuwRIKcDFkzgAHaCPvaphJgbFQCp8JfW5Mv_VwyMfL9n4WfaA/exec';
 
-        // تبديل التبويبات
-        function switchTab(tabName) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            if(tabName === 'office') displayLocations();
+        // وظيفة جلب إحداثيات GPS
+        function getLocation() {
+            const btn = event.target;
+            btn.textContent = "⌛ جاري تحديد الموقع...";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    document.getElementById('coords').value = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+                    btn.textContent = "✅ تم تحديد الموقع بنجاح";
+                    btn.style.background = "#155724";
+                }, () => {
+                    alert("يرجى تفعيل الـ GPS ومنح المتصفح إذن الوصول للموقع");
+                    btn.textContent = "🛰️ جلب إحداثيات الموقع الحالي (GPS)";
+                });
+            } else {
+                alert("متصفحك لا يدعم نظام تحديد المواقع");
+            }
         }
 
-        // معالجة الصور
+        // معالجة الصور وتحويلها لـ Base64 لرفعها لـ Drive
         document.getElementById('photoInput').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            files.forEach(file => {
+            Array.from(e.target.files).forEach(file => {
                 if (currentPhotos.length < 3) {
                     const reader = new FileReader();
-                    reader.onload = (event) => {
-                        currentPhotos.push({ dataUrl: event.target.result });
-                        displayPhotoPreviews();
+                    reader.onload = event => {
+                        currentPhotos.push(event.target.result);
+                        renderPhotos();
                     };
                     reader.readAsDataURL(file);
                 }
             });
         });
 
-        function displayPhotoPreviews() {
-            const container = document.getElementById('photoPreview');
-            container.innerHTML = currentPhotos.map((p, i) => `
+        function renderPhotos() {
+            document.getElementById('photoPreview').innerHTML = currentPhotos.map(p => `
                 <div class="photo-item">
-                    <img src="${p.dataUrl}">
-                    <button type="button" class="photo-remove" onclick="removePhoto(${i})">×</button>
+                    <img src="${p}">
                 </div>
             `).join('');
         }
 
-        function removePhoto(i) {
-            currentPhotos.splice(i, 1);
-            displayPhotoPreviews();
-        }
-
-        // دالة الحفظ الرئيسية والرفع لجوجل شيت
+        // إرسال البيانات للمحرك
         document.getElementById('locationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('saveBtn');
+            const msg = document.getElementById('successMsg');
             
-            const data = {
+            btn.disabled = true;
+            btn.textContent = "جاري رفع الصور والبيانات...";
+
+            const payload = {
                 id: Date.now().toString(),
                 siteName: document.getElementById('siteName').value,
                 propertyNumber: document.getElementById('propertyNumber').value,
                 waterMeterNumber: document.getElementById('waterMeterNumber').value,
-                waterMeterReading: document.getElementById('waterMeterReading').value
+                waterMeterReading: document.getElementById('waterMeterReading').value,
+                coords: document.getElementById('coords').value,
+                photos: currentPhotos // الصور لرفعها لـ Drive
             };
 
             try {
-                btn.disabled = true;
-                btn.textContent = 'جاري الرفع لـ Google Sheets...';
-
-                // إرسال البيانات للرابط الخاص بك
-                await fetch('https://script.google.com/macros/s/AKfycbydC9t4IwXzBsq8IVLHOTwx5Uo7cnnVL0P63pp7cYxHII5xJWwV_hcODrM2OFyugY-X/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
+                // استخدام mode: 'no-cors' لتجنب مشاكل المتصفحات
+                await fetch(SCRIPT_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
                     cache: 'no-cache',
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(payload) 
                 });
 
-                // حفظ نسخة محلية أيضاً
-                allLocations.unshift({...data, timestamp: new Date().toLocaleString(), photos: currentPhotos.map(p => p.dataUrl)});
-                localStorage.setItem('fieldDataLocations', JSON.stringify(allLocations));
-
-                alert('✅ تم الرفع لـ Google Sheets وحفظ نسخة في المتصفح');
+                // تصفير الاستمارة للموقع التالي
+                msg.style.display = 'block';
                 this.reset();
                 currentPhotos = [];
-                displayPhotoPreviews();
-
-            } catch (error) {
-                alert('❌ فشل الرفع للسيرفر، تم الحفظ في ذاكرة الجوال فقط');
-                console.error(error);
+                renderPhotos();
+                document.querySelector('.btn-gps').textContent = "🛰️ جلب إحداثيات الموقع الحالي (GPS)";
+                document.querySelector('.btn-gps').style.background = "#28a745";
+                
+                setTimeout(() => { msg.style.display = 'none'; }, 5000);
+                alert("✅ روعة! تم إرسال البيانات لجدول جوجل ورفع الصور لـ Drive بنجاح.");
+                
+            } catch (err) {
+                console.error(err);
+                alert("❌ حدث خطأ في الإرسال، تأكد من اتصال الإنترنت");
             } finally {
                 btn.disabled = false;
-                btn.textContent = '💾 حفظ البيانات في Google Sheets';
+                btn.textContent = "💾 حفظ وإرسال البيانات لـ Google Sheets";
             }
         });
-
-        function displayLocations() {
-            const container = document.getElementById('locationsList');
-            if (allLocations.length === 0) { container.innerHTML = 'لا توجد بيانات محفوظة.'; return; }
-            container.innerHTML = allLocations.map(loc => `
-                <div class="location-card">
-                    <strong>${loc.siteName}</strong><br>
-                    <small>${loc.timestamp}</small><br>
-                    عقار: ${loc.propertyNumber} | عداد: ${loc.waterMeterNumber} | قراءة: ${loc.waterMeterReading}
-                </div>
-            `).join('');
-        }
     </script>
 </body>
 </html>
